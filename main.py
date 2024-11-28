@@ -8,13 +8,20 @@ from aiogram import Bot, Dispatcher
 # чтобы сконфигурировать бота, используя данные из файла .env.
 from config_data._config import Config, load_config
 
+# импортировать модули с хэндлерами
+from handlers import _other_hadlers, _user_handlers
+
 # Функция конфигурирования и запуска бота
 async def main()->None:
-    config:Config=load_config()
+    config:Config=load_config(None)
 
     # Инициализируем бот и диспетчер
     bot=Bot(token=config.tg_bot.token)
     dp=Dispatcher()
+    print(config.tg_bot.token)
+    # Регистриуем роутеры в диспетчере
+    dp.include_router(_user_handlers.router)
+    dp.include_router(_other_hadlers.router)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
@@ -23,7 +30,8 @@ async def main()->None:
 # Т.к. функция main асинхронная, мы не можем ее просто вызвать, как привыкли это делать
 # с синхронными функциями, но зато мы можем запустить цикл событий и добавить функцию в него.
 
-    asyncio.run(main())
+asyncio.run(main())
+
 
 
 
