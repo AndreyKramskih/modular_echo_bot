@@ -1,11 +1,15 @@
-from email.policy import default
+# появился импорт класса Router
+from aiogram import Router
+
+# Инициализируем роутер уровня модуля
+router = Router()
 
 from aiogram.types import Message
 from lexicon._llexicon import LEXICON_RU
 
 # Этот хэндлер будет срабатывать на любые ваши сообщения,
 # кроме команд "/start" и "/help"
-@dp.message()
+@router.message()
 async def send_echo(message:Message):
     try:
         await message.send_copy(chat_id=message.chat.id)
